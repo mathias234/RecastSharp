@@ -93,4 +93,4 @@ project "RecastWrapper"
 		"Recast"
 	}
 
-	targetdir "../native"
+	targetdir "../RecastSharp/RecastSharp/native"

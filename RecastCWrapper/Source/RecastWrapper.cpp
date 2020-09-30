@@ -103,10 +103,18 @@ EXPORT_API rcwPolyMesh* rcwAllocPolyMesh() {
 	return (rcwPolyMesh*)rcAllocPolyMesh();
 }
 
+EXPORT_API void rcwFreePolyMesh(rcwPolyMesh* pmesh) {
+	rcFreePolyMesh((rcPolyMesh*)pmesh);
+}
+
 EXPORT_API bool rcwBuildPolyMesh(rcwContext* ctx, rcwContourSet& cset, const int nvp, rcwPolyMesh& mesh) {
 	return rcBuildPolyMesh((rcContext*)ctx, (rcContourSet&)cset, nvp, (rcPolyMesh&)mesh);
 }
 
 EXPORT_API rcwPolyMeshDetail* rcwAllocPolyMeshDetail() {
 	return (rcwPolyMeshDetail*)rcAllocPolyMeshDetail();
+}
+
+EXPORT_API void rcwFreePolyMeshDetail(rcwPolyMeshDetail* dmesh) {
+	rcFreePolyMeshDetail((rcPolyMeshDetail*)dmesh);
 }

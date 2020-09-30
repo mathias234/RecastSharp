@@ -65,10 +65,12 @@ EXPORT_API bool rcwBuildContours(rcwContext* ctx, rcwCompactHeightfield& chf,
 	rcwContourSet& cset, const int buildFlags = 1);
 
 EXPORT_API rcwPolyMesh* rcwAllocPolyMesh();
+EXPORT_API void rcwFreePolyMesh(rcwPolyMesh* pmesh);
 
 EXPORT_API bool rcwBuildPolyMesh(rcwContext* ctx, rcwContourSet& cset, const int nvp, rcwPolyMesh& mesh);
 
 EXPORT_API rcwPolyMeshDetail* rcwAllocPolyMeshDetail();
+EXPORT_API void rcwFreePolyMeshDetail(rcwPolyMeshDetail* dmesh);
 
 
 #endif
