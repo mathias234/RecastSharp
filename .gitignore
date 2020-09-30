@@ -2,4 +2,5 @@ RecastSharp/.vs
 RecastSharp/RecastSharp/.vs
 RecastSharp/RecastSharp/obj
 RecastSharp/RecastSharp/bin
-RecastWrapper/Build
+RecastCWrapper/Build
+native
