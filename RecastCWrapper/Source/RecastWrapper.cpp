@@ -1,46 +1,69 @@
 #include "RecastWrapper.h"
+
+#include <cstdio>
+
 #include "Recast.h"
 
-EXPORT_API void rcwVCopy(float* dest, const float* v) {
-	return rcVcopy(dest, v);
-}
-
-EXPORT_API void rcwCalcGridSize(const float* bmin, const float* bmax, float cs, int* w, int* h)
+class WrappedContext : rcContext
 {
-	return rcCalcGridSize(bmin, bmax, cs, w, h);
+	void doLog(const rcLogCategory cat, const char* msg, const int len) override
+	{
+		switch (cat)
+		{
+		case RC_LOG_PROGRESS:
+			printf("Progress: %s\n", msg);
+			break;
+		case RC_LOG_WARNING:
+			printf("Warning: %s\n", msg);
+			break;
+		case RC_LOG_ERROR:
+			printf("Error: %s\n", msg);
+			break;
+		}
+	}
+};
+
+EXPORT_API rcwContext* rcwAllocContext()
+{
+	auto ctx = new WrappedContext();
+	return (rcwContext*)ctx;
+}
+EXPORT_API void rcwFreeContext(rcwContext* ctx)
+{
+	delete ctx;
 }
 
 EXPORT_API rcwHeightfield* rcwAllocHeightfield() {
 	return (rcwHeightfield*)rcAllocHeightfield();
 }
 
-EXPORT_API void rcwFreeHeightField(rcwHeightfield* hf) {
+EXPORT_API void rcwFreeHeightfield(rcwHeightfield* hf) {
 	rcFreeHeightField((rcHeightfield*)hf);
 }
 
 EXPORT_API bool rcwCreateHeightfield(rcwContext* ctx, rcwHeightfield& hf, int width, int height,
-	const float* bmin, const float* bmax,
+	float* bmin, float* bmax,
 	float cs, float ch) {
 	return rcCreateHeightfield((rcContext*)ctx, (rcHeightfield&)hf, width, height, bmin, bmax, cs, ch);
 }
 
-EXPORT_API void rcwMarkWalkableTriangles(rcwContext* ctx, const float walkableSlopeAngle, const float* verts, int nv,
-	const int* tris, int nt, unsigned char* areas) {
+EXPORT_API void rcwMarkWalkableTriangles(rcwContext* ctx, float walkableSlopeAngle, float* verts, int nv,
+	int* tris, int nt, unsigned char* areas) {
 	rcMarkWalkableTriangles((rcContext*)ctx, walkableSlopeAngle, verts, nv, tris, nt, areas);
 }
 
-EXPORT_API bool rcwRasterizeTriangles(rcwContext* ctx, const float* verts, const int nv,
-	const int* tris, const unsigned char* areas, const int nt,
-	rcwHeightfield& solid, const int flagMergeThr) {
+EXPORT_API bool rcwRasterizeTriangles(rcwContext* ctx, float* verts, int nv,
+	int* tris, unsigned char* areas, int nt,
+	rcwHeightfield& solid, int flagMergeThr) {
 	return rcRasterizeTriangles((rcContext*)ctx, verts, nv, tris, areas, nt, (rcHeightfield&)solid, flagMergeThr);
 }
 
-EXPORT_API void rcwFilterLowHangingWalkableObstacles(rcwContext* ctx, const int walkableClimb, rcwHeightfield& solid) {
+EXPORT_API void rcwFilterLowHangingWalkableObstacles(rcwContext* ctx, int walkableClimb, rcwHeightfield& solid) {
 	rcFilterLowHangingWalkableObstacles((rcContext*)ctx, walkableClimb, (rcHeightfield&)solid);
 }
 
-EXPORT_API void rcwFilterLedgeSpans(rcwContext* ctx, const int walkableHeight,
-	const int walkableClimb, rcwHeightfield& solid) {
+EXPORT_API void rcwFilterLedgeSpans(rcwContext* ctx, int walkableHeight,
+	int walkableClimb, rcwHeightfield& solid) {
 	rcFilterLedgeSpans((rcContext*)ctx, walkableHeight, walkableClimb, (rcHeightfield&)solid);
 }
 
@@ -52,6 +75,11 @@ EXPORT_API rcwCompactHeightfield* rcwAllocCompactHeightfield() {
 	return (rcwCompactHeightfield*)rcAllocCompactHeightfield();
 }
 
+EXPORT_API bool rcwBuildCompactHeightfield(rcwContext* ctx, const int walkableHeight, const int walkableClimb,
+	rcwHeightfield& hf, rcwCompactHeightfield& chf) {
+	return rcBuildCompactHeightfield((rcContext*)ctx, walkableHeight, walkableClimb, (rcHeightfield&)hf, (rcCompactHeightfield&)chf);
+}
+
 EXPORT_API void rcwFreeCompactHeightfield(rcwCompactHeightfield* chf) {
 	rcFreeCompactHeightfield((rcCompactHeightfield*)chf);
 }
@@ -60,8 +88,8 @@ EXPORT_API bool rcwErodeWalkableArea(rcwContext* ctx, int radius, rcwCompactHeig
 	return rcErodeWalkableArea((rcContext*)ctx, radius, (rcCompactHeightfield&)chf);
 }
 
-EXPORT_API void rcwMarkConvexPolyArea(rcwContext* ctx, const float* verts, const int nverts,
-	const float hmin, const float hmax, unsigned char areaId,
+EXPORT_API void rcwMarkConvexPolyArea(rcwContext* ctx, float* verts, int nverts,
+	float hmin, float hmax, unsigned char areaId,
 	rcwCompactHeightfield& chf) {
 	rcMarkConvexPolyArea((rcContext*)ctx, verts, nverts, hmin, hmax, areaId, (rcCompactHeightfield&)chf);
 }
@@ -71,17 +99,17 @@ EXPORT_API bool rcwBuildDistanceField(rcwContext* ctx, rcwCompactHeightfield& ch
 }
 
 EXPORT_API bool rcwBuildRegions(rcwContext* ctx, rcwCompactHeightfield& chf,
-	const int borderSize, const int minRegionArea, const int mergeRegionArea) {
+	int borderSize, int minRegionArea, int mergeRegionArea) {
 	return rcBuildRegions((rcContext*)ctx, (rcCompactHeightfield&)chf, borderSize, minRegionArea, mergeRegionArea);
 }
 
 EXPORT_API bool rcwBuildRegionsMonotone(rcwContext* ctx, rcwCompactHeightfield& chf,
-	const int borderSize, const int minRegionArea, const int mergeRegionArea) {
+	int borderSize, int minRegionArea, int mergeRegionArea) {
 	return rcBuildRegionsMonotone((rcContext*)ctx, (rcCompactHeightfield&)chf, borderSize, minRegionArea, mergeRegionArea);
 }
 
 EXPORT_API bool rcwBuildLayerRegions(rcwContext* ctx, rcwCompactHeightfield& chf,
-	const int borderSize, const int minRegionArea) {
+	int borderSize, int minRegionArea) {
 	return rcBuildLayerRegions((rcContext*)ctx, (rcCompactHeightfield&)chf, borderSize, minRegionArea);
 }
 
@@ -94,8 +122,8 @@ EXPORT_API void rcwFreeContourSet(rcwContourSet* cset) {
 }
 
 EXPORT_API bool rcwBuildContours(rcwContext* ctx, rcwCompactHeightfield& chf,
-	const float maxError, const int maxEdgeLen,
-	rcwContourSet& cset, const int buildFlags) {
+	float maxError, int maxEdgeLen,
+	rcwContourSet& cset, int buildFlags) {
 	return rcBuildContours((rcContext*)ctx, (rcCompactHeightfield&)chf, maxError, maxEdgeLen, (rcContourSet&)cset, buildFlags);
 }
 
@@ -107,7 +135,7 @@ EXPORT_API void rcwFreePolyMesh(rcwPolyMesh* pmesh) {
 	rcFreePolyMesh((rcPolyMesh*)pmesh);
 }
 
-EXPORT_API bool rcwBuildPolyMesh(rcwContext* ctx, rcwContourSet& cset, const int nvp, rcwPolyMesh& mesh) {
+EXPORT_API bool rcwBuildPolyMesh(rcwContext* ctx, rcwContourSet& cset, int nvp, rcwPolyMesh& mesh) {
 	return rcBuildPolyMesh((rcContext*)ctx, (rcContourSet&)cset, nvp, (rcPolyMesh&)mesh);
 }
 
@@ -117,4 +145,19 @@ EXPORT_API rcwPolyMeshDetail* rcwAllocPolyMeshDetail() {
 
 EXPORT_API void rcwFreePolyMeshDetail(rcwPolyMeshDetail* dmesh) {
 	rcFreePolyMeshDetail((rcPolyMeshDetail*)dmesh);
+}
+
+EXPORT_API bool rcwBuildPolyMeshDetail(rcwContext* ctx, const rcwPolyMesh& mesh, const rcwCompactHeightfield& chf,
+	const float sampleDist, const float sampleMaxError,
+	rcwPolyMeshDetail& dmesh) {
+	return rcBuildPolyMeshDetail((rcContext*)ctx, (rcPolyMesh&)mesh, (rcCompactHeightfield&)chf, sampleDist, sampleMaxError, (rcPolyMeshDetail&)dmesh);
+}
+
+EXPORT_API void rcwVCopy(float* dest, float* v) {
+	return rcVcopy(dest, v);
+}
+
+EXPORT_API void rcwCalcGridSize(float* bmin, float* bmax, float cs, int* w, int* h)
+{
+	return rcCalcGridSize(bmin, bmax, cs, w, h);
 }

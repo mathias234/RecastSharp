@@ -7,27 +7,49 @@ namespace RecastSharpTest
     {
         unsafe static void Main(string[] args)
         {
-            var hf = RecastNative.rcwAllocHeightfield();
-            Console.WriteLine("Address of allocated heightfield " + hf);
-            RecastNative.rcwFreeHeightField(hf);
+            int ntris = 50;
 
-            var test = new float[3];
-            test[0] = 1;
-            test[1] = 2;
-            test[2] = 3;
-            float[] result = new float[3];
+            var ctx = RecastNative.rcwAllocContext();
 
-            
-            fixed (float* ptr = &test[0])
-            fixed (float* ptr1 = &result[0])
-            {
-                RecastNative.rcwVCopy(ptr1, ptr);
+            float[] bmin = new float[3];
+            float[] bmax = new float[3];
+            bmax[0] = 100;
+            bmax[1] = 100;
+            bmax[2] = 100;
+
+            float cs = 0.2f;
+            float ch = 0.2f;
+
+            float walkableSlopAngle = 50;
+
+            int width = 0;
+            int height = 0;
+
+
+            RecastNative.rcwCalcGridSize(ref bmin[0], ref bmax[0], cs, ref width, ref height);
+
+            Console.WriteLine("Width: " + width + " Height: " + height);
+
+            var solid = RecastNative.rcwAllocHeightfield();
+            if(solid == IntPtr.Zero) {
+                Console.WriteLine("Failed to allocated heightfield");
+                return;
             }
 
-            Console.WriteLine("X " + result[0]);
-            Console.WriteLine("Y " + result[1]);
-            Console.WriteLine("Z " + result[2]);
+            if (!RecastNative.rcwCreateHeightfield(ctx, solid, width, height, ref bmin[0], ref bmax[0], cs, ch))
+            {
+                Console.WriteLine("Failed to create heightfield");
+                return;
+            }
 
+            var triareas = new byte[ntris];
+
+            RecastNative.rcwMarkWalkableTriangles(ctx, walkableSlopAngle, );
+
+            RecastNative.rcwFreeHeightfield(solid);
+            RecastNative.rcwFreeContext(ctx);
+
+            Console.ReadLine();
         }
     }
 }

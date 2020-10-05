@@ -5,17 +5,25 @@ namespace RecastSharp
 {
     public unsafe class RecastNative
     {
+
         private const string DLL_NAME = "native/RecastWrapper";
+
+        /* Context */
+        [DllImport(DLL_NAME)]
+        public static extern IntPtr rcwAllocContext();
+        [DllImport(DLL_NAME)]
+        public static extern void rcwFreeContext(IntPtr ctx);
+
 
         /* Heightfield */
         [DllImport(DLL_NAME)]
         public static extern IntPtr rcwAllocHeightfield();
 
         [DllImport(DLL_NAME)]
-        public static extern void rcwFreeHeightField(IntPtr hf);
+        public static extern void rcwFreeHeightfield(IntPtr hf);
 
         [DllImport(DLL_NAME)]
-        public static extern bool rcwCreateHeightfield(IntPtr ctx, IntPtr hf, int width, int height, float* bmin, float* bmax, float cs, float ch);
+        public static extern bool rcwCreateHeightfield(IntPtr ctx, IntPtr hf, int width, int height, ref float bmin, ref float bmax, float cs, float ch);
 
         [DllImport(DLL_NAME)]
         public static extern void rcwMarkWalkableTriangles(IntPtr ctx, float walkableSlopeAngle, float* verts, int nv, int* tris, int nt, byte* areas);
@@ -38,6 +46,9 @@ namespace RecastSharp
 
         [DllImport(DLL_NAME)]
         public static extern void rcwFreeCompactHeightfield(IntPtr hf);
+
+        [DllImport(DLL_NAME)]
+        public static extern bool rcwBuildCompactHeightfield(IntPtr ctx, int walkableHeight, int walkableClimb, IntPtr hf, IntPtr chf);
 
         [DllImport(DLL_NAME)]
         public static extern bool rcwErodeWalkableArea(IntPtr ctx, int radius, IntPtr chf);
@@ -74,6 +85,9 @@ namespace RecastSharp
         [DllImport(DLL_NAME)]
         public static extern void rcwFreePolyMesh(IntPtr pmesh);
 
+        [DllImport(DLL_NAME)]
+        public static extern bool rcwBuildPolyMesh(IntPtr ctx, IntPtr cset, int nvp, IntPtr mesh);
+
         /* PolyMeshDetail */
         [DllImport(DLL_NAME)]
         public static extern IntPtr rcwAllocPolyMeshDetail();
@@ -81,12 +95,15 @@ namespace RecastSharp
         [DllImport(DLL_NAME)]
         public static extern void rcwFreePolyMeshDetail(IntPtr dmesh);
 
+        [DllImport(DLL_NAME)]
+        public static extern bool rcwBuildPolyMeshDetail(IntPtr ctx, IntPtr mesh, IntPtr chf, float sampleDist, float sampleMaxError, IntPtr dmesh);
+
         /* Utils */
         [DllImport(DLL_NAME)]
         public static extern void rcwVCopy(float* dest, float* v);
 
         [DllImport(DLL_NAME)]
-        public static extern void rcwCalcGridSize(float* bmin, float* bmax, float cs, int* w, int* h);
+        public static extern void rcwCalcGridSize(ref float bmin, ref float bmax, float cs, ref int w, ref int h);
 
     }
 }
