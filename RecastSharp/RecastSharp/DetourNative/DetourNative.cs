@@ -11,7 +11,7 @@ namespace RecastSharp.DetourNative
         public static extern void dtwFree(IntPtr ptr);
 
         [DllImport(DLL_NAME)]
-        public static extern bool dtwCreateNavMeshData(DtNavMeshCreateParams* createParams, byte** outData, int* outDataSize);
+        public static extern bool dtwCreateNavMeshData(ref DtNavMeshCreateParams createParams, out byte* outData, out int outDataSize);
 
         [DllImport(DLL_NAME)]
         public static extern IntPtr dtwAllocNavMesh();

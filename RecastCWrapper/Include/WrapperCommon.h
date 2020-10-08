@@ -9,4 +9,11 @@
 #define EXPORT_API extern "C"
 #endif
 
+#define rcwHeightfield int
+#define rcwContext int
+#define rcwCompactHeightfield int
+#define rcwContourSet int
+#define rcwPolyMesh int
+#define rcwPolyMeshDetail int
+
 #endif

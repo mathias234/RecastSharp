@@ -3,12 +3,6 @@
 
 #include "WrapperCommon.h"
 
-#define rcwHeightfield int
-#define rcwContext int
-#define rcwCompactHeightfield int
-#define rcwContourSet int
-#define rcwPolyMesh int
-#define rcwPolyMeshDetail int
 
 /* Context */
 EXPORT_API rcwContext* rcwAllocContext();

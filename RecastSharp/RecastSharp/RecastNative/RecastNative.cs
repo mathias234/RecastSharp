@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace RecastSharp
+namespace RecastSharp.RecastNative
 {
     public unsafe class RecastNative
     {

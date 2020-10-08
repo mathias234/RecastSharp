@@ -28,8 +28,8 @@
 		public int TileX;
 		public int TileY;
 		public int TileLayer; 
-		public fixed float BMin[3]; 
-        public fixed float BMax[3];
+		public float* BMin; 
+        public float* BMax;
 
 		public float WalkableHeight;
 		public float WalkableRadius;
