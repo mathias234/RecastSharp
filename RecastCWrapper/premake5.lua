@@ -43,6 +43,9 @@ solution "recastwrapper"
 		-- * C4351: new behavior for array initialization
 		buildoptions { "/W3", "/wd4351" }
 
+	configuration { "linux", "gmake" }
+		buildoptions { "-fPIC" }
+
 	filter "platforms:Win32"
 		architecture "x32"
 

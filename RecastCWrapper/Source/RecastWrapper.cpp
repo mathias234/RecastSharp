@@ -8,6 +8,7 @@ class WrappedContext : rcContext
 {
 	void doLog(const rcLogCategory cat, const char* msg, const int len) override
 	{
+		(void)(len);
 		switch (cat)
 		{
 		case RC_LOG_PROGRESS:
