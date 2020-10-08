@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
 
 namespace RecastSharp.DetourNative
 {
@@ -40,6 +42,123 @@ namespace RecastSharp.DetourNative
         public float Ch;
 
         public bool BuildBvTree;
+
+        // A simple helper for Marshal.AllocHGlobal
+        private unsafe static T* AllocHGlobal<T>(int ele) where T : unmanaged
+        {
+            var size = ele * sizeof(T);
+            if(size > 0) { 
+                return (T*)Marshal.AllocHGlobal(size);
+            }
+            else
+            {
+                return (T*)0;
+            }
+        }
+
+        public static DtNavMeshCreateParams Deserialize(Stream stream)
+        {
+            var dtParams = new DtNavMeshCreateParams();
+
+            using (var br = new BinaryReader(stream))
+            {
+                // Poly Mesh
+                dtParams.VertCount = br.ReadInt32();
+                dtParams.Verts = AllocHGlobal<ushort>(dtParams.VertCount * 3);
+                for (int i = 0; i < dtParams.VertCount * 3; i++)
+                {
+                    dtParams.Verts[i] = br.ReadUInt16();
+                }
+
+                dtParams.PolyCount = br.ReadInt32();
+                dtParams.Nvp = br.ReadInt32();
+                dtParams.Polys = AllocHGlobal<ushort>(dtParams.PolyCount * 2 * dtParams.Nvp);
+                for (int i = 0; i < dtParams.PolyCount * 2 * dtParams.Nvp; i++)
+                {
+                    dtParams.Polys[i] = br.ReadUInt16();
+                }
+
+                dtParams.PolyAreas = AllocHGlobal<byte>(dtParams.PolyCount);
+                dtParams.PolyFlags = AllocHGlobal<ushort>(dtParams.PolyCount);
+                for (int i = 0; i < dtParams.PolyCount; i++)
+                {
+                    dtParams.PolyAreas[i] = br.ReadByte();
+                    dtParams.PolyFlags[i] = br.ReadUInt16();
+                }
+
+                // Detail poly mesh
+                dtParams.DetailMeshes = AllocHGlobal<uint>(dtParams.PolyCount * 4);
+                for (int i = 0; i < dtParams.PolyCount * 4; i++)
+                {
+                    dtParams.DetailMeshes[i] = br.ReadUInt32();
+                }
+
+                dtParams.DetailVertsCount = br.ReadInt32();
+                dtParams.DetailVerts = AllocHGlobal<float>(dtParams.DetailVertsCount * 3);
+                for (int i = 0; i < dtParams.DetailVertsCount * 3; i++)
+                {
+                    dtParams.DetailVerts[i] = br.ReadSingle();
+                }
+
+                dtParams.DetailTriCount = br.ReadInt32();
+                dtParams.DetailTris = AllocHGlobal<byte>(dtParams.DetailTriCount * 4);
+                for (int i = 0; i < dtParams.DetailTriCount * 4; i++)
+                {
+                    dtParams.DetailTris[i] = br.ReadByte();
+                }
+
+                // Offmesh Connections
+                dtParams.OffMeshConCount = br.ReadInt32();
+                dtParams.OffMeshConVerts = AllocHGlobal<float>(dtParams.OffMeshConCount * 6);
+                for (int i = 0; i < dtParams.OffMeshConCount * 6; i++)
+                {
+                    dtParams.OffMeshConVerts[i] = br.ReadSingle();
+                }
+
+                dtParams.OffMeshConFlags = AllocHGlobal<ushort>(dtParams.OffMeshConCount);
+                dtParams.OffMeshConAreas = AllocHGlobal<byte>(dtParams.OffMeshConCount);
+                dtParams.OffMeshConDir = AllocHGlobal<byte>(dtParams.OffMeshConCount);
+                dtParams.OffMeshConUserId = AllocHGlobal<uint>(dtParams.OffMeshConCount);
+                for (int i = 0; i < dtParams.OffMeshConCount; i++)
+                {
+                    dtParams.OffMeshConFlags[i] = br.ReadUInt16();
+                    dtParams.OffMeshConAreas[i] = br.ReadByte();
+                    dtParams.OffMeshConDir[i] = br.ReadByte();
+                    dtParams.OffMeshConUserId[i] = br.ReadUInt32();
+                }
+
+                // Tile attributes
+
+                dtParams.UserId = br.ReadUInt32();
+                dtParams.TileX = br.ReadInt32();
+                dtParams.TileY = br.ReadInt32();
+                dtParams.TileLayer = br.ReadInt32();
+
+                dtParams.BMin = AllocHGlobal<float>(3);
+                dtParams.BMin[0] = br.ReadSingle();
+                dtParams.BMin[1] = br.ReadSingle();
+                dtParams.BMin[2] = br.ReadSingle();
+
+                dtParams.BMax = AllocHGlobal<float>(3);
+                dtParams.BMax[0] = br.ReadSingle();
+                dtParams.BMax[1] = br.ReadSingle();
+                dtParams.BMax[2] = br.ReadSingle();
+
+                // General Config
+                dtParams.WalkableHeight = br.ReadSingle();
+                dtParams.WalkableRadius = br.ReadSingle();
+                dtParams.WalkableClimb = br.ReadSingle();
+                dtParams.Cs = br.ReadSingle();
+                dtParams.Ch = br.ReadSingle();
+
+                dtParams.BuildBvTree = br.ReadBoolean();
+
+            }
+
+            return dtParams;
+        }
+
+
 
         public void Serialize(Stream stream)
         {
