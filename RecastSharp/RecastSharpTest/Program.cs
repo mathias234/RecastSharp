@@ -1,5 +1,6 @@
 ﻿using System;
 using RecastSharp;
+using RecastSharp.RecastNative;
 
 namespace RecastSharpTest
 {

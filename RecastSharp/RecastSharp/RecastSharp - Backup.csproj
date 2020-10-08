@@ -19,7 +19,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DefineConstants>TRACE;Win64</DefineConstants>
   </PropertyGroup>
-  
   <ItemGroup>
     <None Update="native\libRecastWrapper.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
