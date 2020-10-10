@@ -7,7 +7,12 @@ namespace RecastSharp.RecastNative
 {
     public unsafe class RecastNativeProperties
     {
-        private const string DLL_NAME = "native/RecastWrapper";
+#if Win32
+        private const string DLL_NAME = "native/RecastWrapper32";
+#else
+        private const string DLL_NAME = "native/RecastWrapper64";
+#endif
+
 
         /* PolyMesh */
         [DllImport(DLL_NAME)]

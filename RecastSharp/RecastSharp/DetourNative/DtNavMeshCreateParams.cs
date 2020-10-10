@@ -60,7 +60,7 @@ namespace RecastSharp.DetourNative
         {
             var dtParams = new DtNavMeshCreateParams();
 
-            using (var br = new BinaryReader(stream))
+            var br = new BinaryReader(stream);
             {
                 // Poly Mesh
                 dtParams.VertCount = br.ReadInt32();
@@ -162,7 +162,7 @@ namespace RecastSharp.DetourNative
 
         public void Serialize(Stream stream)
         {
-            using (var bw = new BinaryWriter(stream))
+            var bw = new BinaryWriter(stream);
             {
                 // Poly Mesh
 
