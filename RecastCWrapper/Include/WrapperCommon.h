@@ -8,11 +8,22 @@
 #define EXPORT_API extern "C"
 #endif
 
-#define rcwHeightfield int
-#define rcwContext int
-#define rcwCompactHeightfield int
-#define rcwContourSet int
-#define rcwPolyMesh int
-#define rcwPolyMeshDetail int
+#define rcwType int
+
+#define rcwHeightfield rcwType
+#define rcwContext rcwType
+#define rcwCompactHeightfield rcwType
+#define rcwContourSet rcwType
+#define rcwPolyMesh rcwType
+#define rcwPolyMeshDetail rcwType
+
+#define dtwNavMeshCreateParams rcwType
+#define dtwNavMesh rcwType
+#define dtwNavMeshQuery rcwType
+#define dtwStatus rcwType
+#define dtwNavMeshParams rcwType
+#define dtwTileRef rcwType
+#define dtwPolyRef rcwType
+#define dtwQueryFilter rcwType
 
 #endif

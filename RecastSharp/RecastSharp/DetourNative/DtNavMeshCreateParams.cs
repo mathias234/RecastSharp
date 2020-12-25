@@ -32,8 +32,14 @@ namespace RecastSharp.DetourNative
         public int TileX;
         public int TileY;
         public int TileLayer;
-        public float* BMin;
-        public float* BMax;
+
+        public float BMinX;
+        public float BMinY;
+        public float BMinZ;
+
+        public float BMaxX;
+        public float BMaxY;
+        public float BMaxZ;
 
         public float WalkableHeight;
         public float WalkableRadius;
@@ -54,6 +60,27 @@ namespace RecastSharp.DetourNative
             {
                 return (T*)0;
             }
+        }
+
+        private unsafe static void FreeHGlobal<T>(T* data) where T : unmanaged
+        {
+            Marshal.FreeHGlobal((IntPtr)data);
+        }
+
+        public void Free() {
+            FreeHGlobal(Verts);
+            FreeHGlobal(Polys);
+            FreeHGlobal(PolyFlags);
+            FreeHGlobal(PolyAreas);
+            FreeHGlobal(DetailMeshes);
+            FreeHGlobal(DetailVerts);
+            FreeHGlobal(DetailTris);
+            FreeHGlobal(OffMeshConVerts);
+            FreeHGlobal(OffMeshConRad);
+            FreeHGlobal(OffMeshConFlags);
+            FreeHGlobal(OffMeshConAreas);
+            FreeHGlobal(OffMeshConDir);
+            FreeHGlobal(OffMeshConUserId);
         }
 
         public static DtNavMeshCreateParams Deserialize(Stream stream)
@@ -134,15 +161,13 @@ namespace RecastSharp.DetourNative
                 dtParams.TileY = br.ReadInt32();
                 dtParams.TileLayer = br.ReadInt32();
 
-                dtParams.BMin = AllocHGlobal<float>(3);
-                dtParams.BMin[0] = br.ReadSingle();
-                dtParams.BMin[1] = br.ReadSingle();
-                dtParams.BMin[2] = br.ReadSingle();
+                dtParams.BMinX = br.ReadSingle();
+                dtParams.BMinY = br.ReadSingle();
+                dtParams.BMinZ = br.ReadSingle();
 
-                dtParams.BMax = AllocHGlobal<float>(3);
-                dtParams.BMax[0] = br.ReadSingle();
-                dtParams.BMax[1] = br.ReadSingle();
-                dtParams.BMax[2] = br.ReadSingle();
+                dtParams.BMaxX = br.ReadSingle();
+                dtParams.BMaxY = br.ReadSingle();
+                dtParams.BMaxZ = br.ReadSingle();
 
                 // General Config
                 dtParams.WalkableHeight = br.ReadSingle();
@@ -221,13 +246,13 @@ namespace RecastSharp.DetourNative
                 bw.Write(TileY);
                 bw.Write(TileLayer);
 
-                bw.Write(BMin[0]);
-                bw.Write(BMin[1]);
-                bw.Write(BMin[2]);
+                bw.Write(BMinX);
+                bw.Write(BMinY);
+                bw.Write(BMinZ);
 
-                bw.Write(BMax[0]);
-                bw.Write(BMax[1]);
-                bw.Write(BMax[2]);
+                bw.Write(BMaxX);
+                bw.Write(BMaxY);
+                bw.Write(BMaxZ);
 
                 // General config
 

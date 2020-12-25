@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RecastSharp": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
