@@ -7,7 +7,6 @@
 EXPORT_API bool dtwCreateNavMeshData(dtwNavMeshCreateParams* params, unsigned char** outData, int* outDataSize) {
 	
 	dtNavMeshCreateParams* dtParams = (dtNavMeshCreateParams*)params;
-	printf("Adding Tile %d, %d\r\n", dtParams->tileX, dtParams->tileY);
 	return dtCreateNavMeshData((dtNavMeshCreateParams*)params, outData, outDataSize);
 }
 
