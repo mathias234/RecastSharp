@@ -5,9 +5,8 @@
 #include <iostream>
 
 EXPORT_API bool dtwCreateNavMeshData(dtwNavMeshCreateParams* params, unsigned char** outData, int* outDataSize) {
-	
 	dtNavMeshCreateParams* dtParams = (dtNavMeshCreateParams*)params;
-	return dtCreateNavMeshData((dtNavMeshCreateParams*)params, outData, outDataSize);
+	return dtCreateNavMeshData(dtParams, outData, outDataSize);
 }
 
 EXPORT_API dtwNavMesh* dtwAllocNavMesh() {
