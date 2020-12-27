@@ -95,7 +95,11 @@ project "RecastWrapper"
 		"Detour",
 		"Recast"
 	}
-	
+
+	filter "system:Linux"
+		targetname "RecastWrapper64"
+		targetdir "../RecastSharp/RecastSharp/native"
+
 	filter "platforms:Win32" 
 		targetname "RecastWrapper32"
 		targetdir "../RecastSharp/RecastSharp/native"
