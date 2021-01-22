@@ -7,7 +7,9 @@ namespace RecastSharp.RecastNative
     {
 #if Win32
         private const string DLL_NAME = "native/RecastWrapper32";
-#else
+#elif LINUX
+        private const string DLL_NAME = "native/libRecastWrapper64";
+#else 
         private const string DLL_NAME = "native/RecastWrapper64";
 #endif
 
