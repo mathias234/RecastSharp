@@ -43,7 +43,7 @@ solution "recastwrapper"
 		-- * C4351: new behavior for array initialization
 		buildoptions { "/W3", "/wd4351" }
 
-	configuration { "linux", "gmake" }
+	configuration { "linux", "gmake2" }
 		buildoptions { "-fPIC" }
 
 	filter "platforms:Win32"
@@ -62,9 +62,10 @@ project "Detour"
 		"../RecastNav/Detour/Source/*.cpp" 
 	}
 	-- linux library cflags and libs
-	configuration { "linux", "gmake" }
+	configuration { "linux", "gmake2" }
 		buildoptions { 
-			"-Wno-class-memaccess"
+			"-Wno-class-memaccess",
+			"-Wno-maybe-uninitialized"
 		}
 project "Recast"
 	language "C++"
@@ -98,13 +99,13 @@ project "RecastWrapper"
 
 	filter "system:Linux"
 		targetname "RecastWrapper64"
-		targetdir "../RecastSharp/RecastSharp/native"
+		targetdir ( todir .. "/out/Release" )
 
 	filter "platforms:Win32" 
 		targetname "RecastWrapper32"
-		targetdir "../RecastSharp/RecastSharp/native"
+		targetdir ( todir .. "/out/Release" )
 
 	filter "platforms:Win64"
 		targetname "RecastWrapper64"
-		targetdir "../RecastSharp/RecastSharp/native"
+		targetdir ( todir .. "/out/Release" )
 

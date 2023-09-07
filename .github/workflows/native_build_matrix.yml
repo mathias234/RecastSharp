@@ -1,0 +1,96 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-latest
+        
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+        
+    # Ubuntu Steps
+    - name: Install Dependencies
+      run: sudo apt-get update && sudo apt-get install -y libgl1-mesa-dev xorg-dev
+      
+    - name: Download and Extract Premake5
+      run: |
+        wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta2/premake-5.0.0-beta2-linux.tar.gz
+        tar xf premake-5.0.0-beta2-linux.tar.gz
+
+    - name: Generate Makefile
+      working-directory: ./RecastCWrapper
+      run: ../premake5 gmake2
+
+    - name: Build Project
+      run: make -C ./RecastCWrapper/Build/gmake2 config=release
+        
+    - name: Upload Build Artifact (Ubuntu)
+      uses: actions/upload-artifact@v2
+      with:
+        name: ubuntu-artifact
+        path: ./RecastCWrapper/Build/gmake2/out/Release
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
+    - name: Download and Extract Premake5
+      run: |
+        Invoke-WebRequest -Uri https://github.com/premake/premake-core/releases/download/v5.0.0-beta2/premake-5.0.0-beta2-windows.zip -OutFile premake5.zip
+        Expand-Archive -Path premake5.zip -DestinationPath ./
+
+    - name: Generate Makefile
+      working-directory: ./RecastCWrapper
+      run: ..\premake5.exe vs2019
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Build Project (Windows)
+      run: |
+        msbuild ./RecastCWrapper/Build/vs2019/recastwrapper.sln /p:Configuration=Release /p:Platform="Win32"
+        & msbuild ./RecastCWrapper/Build/vs2019/recastwrapper.sln /p:Configuration=Release /p:Platform="Win64"
+
+    - name: Upload Build Artifact (Windows)
+      uses: actions/upload-artifact@v2
+      with:
+        name: windows-artifact
+        path: ./RecastCWrapper/Build/vs2019/out/Release
+
+  publish-nuget:
+    needs: [build-ubuntu, build-windows]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: ./artifacts
+
+      - name: Prepare NuGet Package
+        run: |
+          find ./artifacts/ubuntu-artifact/ -type f -name "*.so" -exec cp {} ./RecastSharp/RecastSharp/native/ \;
+          find ./artifacts/ubuntu-artifact/ -type f -name "*.dll" -exec cp {} ./RecastSharp/RecastSharp/native/ \;
+
+      - name: Package NuGet
+        run: dotnet pack ./RecastSharp/RecastSharp/RecastSharp.csproj --configuration Release --output ./cs-artifacts
+
+      - name: Publish NuGet
+        run: |
+          dotnet nuget push ./cs-artifacts/RecastSharp*.nupkg --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+
