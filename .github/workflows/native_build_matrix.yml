@@ -84,8 +84,9 @@ jobs:
 
       - name: Prepare NuGet Package
         run: |
-          find ./artifacts/ubuntu-artifact/ -type f -name "*.so" -exec cp {} ./RecastSharp/RecastSharp/native/ \;
-          find ./artifacts/ubuntu-artifact/ -type f -name "*.dll" -exec cp {} ./RecastSharp/RecastSharp/native/ \;
+          find ./artifacts/ubuntu-artifact/ -type f -name "*.so" -exec cp {} ./RecastSharp/RecastSharp/runtimes/ \;
+          find ./artifacts/ubuntu-artifact/ -type f -name "*.dll" -exec cp {} ./RecastSharp/RecastSharp/runtimes/ \;
+          ls ./RecastSharp/RecastSharp/runtimes
 
       - name: Package NuGet
         run: dotnet pack ./RecastSharp/RecastSharp/RecastSharp.csproj --configuration Release --output ./cs-artifacts

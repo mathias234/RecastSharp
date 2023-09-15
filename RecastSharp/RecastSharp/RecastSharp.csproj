@@ -3,7 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Platforms>AnyCPU;x64;x86</Platforms>
-    <PackageVersion>0.0.2</PackageVersion>
+    <PackageVersion>0.0.4</PackageVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
@@ -24,20 +24,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
-    <None Update="native\libRecastWrapper.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="native\libRecastWrapper64.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="native\RecastWrapper32.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="native\RecastWrapper32.lib">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="native\RecastWrapper64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="runtimes\RecastWrapper32.dll" CopyToOutputDirectory="Always" Pack="true"/>
+    <None Include="runtimes\RecastWrapper64.dll" CopyToOutputDirectory="Always" Pack="true"/>
+    <None Include="runtimes\libRecastWrapper64.so" CopyToOutputDirectory="Always" Pack="true"/>
   </ItemGroup>
 </Project>

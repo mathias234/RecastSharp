@@ -6,11 +6,11 @@ namespace RecastSharp.RecastNative
     public unsafe class RecastNative
     {
 #if Win32
-        private const string DLL_NAME = "native/RecastWrapper32";
+        private const string DLL_NAME = "runtimes/RecastWrapper32";
 #elif LINUX
-        private const string DLL_NAME = "native/libRecastWrapper64";
+        private const string DLL_NAME = "runtimes/libRecastWrapper64";
 #else 
-        private const string DLL_NAME = "native/RecastWrapper64";
+        private const string DLL_NAME = "runtimes/RecastWrapper64";
 #endif
 
 
