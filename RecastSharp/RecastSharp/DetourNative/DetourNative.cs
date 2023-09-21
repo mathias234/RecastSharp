@@ -23,11 +23,11 @@ namespace RecastSharp.DetourNative
     public unsafe class DetourNative
     {
 #if Win32
-        private const string DLL_NAME = "runtimes/RecastWrapper32";
+        private const string DLL_NAME = "RecastWrapper32";
 #elif LINUX
-        private const string DLL_NAME = "runtimes/libRecastWrapper64";
+        private const string DLL_NAME = "libRecastWrapper64";
 #else
-        private const string DLL_NAME = "runtimes/RecastWrapper64";
+        private const string DLL_NAME = "RecastWrapper64";
 #endif
 
         [DllImport(DLL_NAME)]
