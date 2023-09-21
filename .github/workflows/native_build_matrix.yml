@@ -81,11 +81,14 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           path: ./artifacts
-
+          
       - name: Prepare NuGet Package
         run: |
-          find ./artifacts/ubuntu-artifact/ -type f -name "*.so" -exec cp {} ./RecastSharp/RecastSharp/runtimes/ \;
-          find ./artifacts/ubuntu-artifact/ -type f -name "*.dll" -exec cp {} ./RecastSharp/RecastSharp/runtimes/ \;
+          mkdir -p ./RecastSharp/RecastSharp/runtimes/win-x64/native
+          mkdir -p ./RecastSharp/RecastSharp/runtimes/win-x86/native
+          mkdir -p ./RecastSharp/RecastSharp/runtimes/linux-x64/native
+          find ./artifacts/ubuntu-artifact/ -type f -name "*.so" -exec cp {} ./RecastSharp/RecastSharp/runtimes/linux-x64/native/ \;
+          find ./artifacts/windows-artifact/ -type f -name "*.dll" -exec cp {} ./RecastSharp/RecastSharp/runtimes/win-x64/native/ \;
           ls ./RecastSharp/RecastSharp/runtimes
 
       - name: Package NuGet
