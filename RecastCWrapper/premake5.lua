@@ -112,3 +112,7 @@ project "RecastWrapper"
 		targetname "RecastWrapper64"
 		targetdir ( todir .. "/out/Release" )
 
+	filter "system:Macosx"
+		targetname "RecastWrapper64"
+		targetdir ( todir .. "/out/Release" )
+
