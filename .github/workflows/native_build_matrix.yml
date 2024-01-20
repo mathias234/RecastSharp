@@ -118,7 +118,7 @@ jobs:
           mkdir -p ./RecastSharp/RecastSharp/runtimes/linux-x64/native
           mkdir -p ./RecastSharp/RecastSharp/runtimes/osx-arm64/native
           find ./artifacts/ubuntu-artifact/ -type f -name "*.so" -exec cp {} ./RecastSharp/RecastSharp/runtimes/linux-x64/native/ \;
-          find ./artifacts/arm64-artifact/ -type f -name "*.so" -exec cp {} ./RecastSharp/RecastSharp/runtimes/osx-arm64/native/ \;
+          find ./artifacts/arm64-artifact/ -type f -name "*.dylib" -exec cp {} ./RecastSharp/RecastSharp/runtimes/osx-arm64/native/ \;
           find ./artifacts/windows-artifact/ -type f -name "RecastWrapper64.dll" -exec cp {} ./RecastSharp/RecastSharp/runtimes/win-x64/native/ \;
           find ./artifacts/windows-artifact/ -type f -name "RecastWrapper32.dll" -exec cp {} ./RecastSharp/RecastSharp/runtimes/win-x86/native/ \;
 
