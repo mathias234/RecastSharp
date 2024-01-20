@@ -101,18 +101,18 @@ project "RecastWrapper"
 	}
 
 	filter "system:Linux"
-		targetname "RecastWrapper64"
+		targetname "RecastWrapper"
 		targetdir ( todir .. "/out/Release" )
 
 	filter "platforms:Win32" 
-		targetname "RecastWrapper32"
-		targetdir ( todir .. "/out/Release" )
+		targetname "RecastWrapper"
+		targetdir ( todir .. "/out/x86/Release" )
 
 	filter "platforms:Win64"
-		targetname "RecastWrapper64"
-		targetdir ( todir .. "/out/Release" )
+		targetname "RecastWrapper"
+		targetdir ( todir .. "/out/x64/Release" )
 
 	filter "system:Macosx"
-		targetname "RecastWrapper64"
+		targetname "RecastWrapper"
 		targetdir ( todir .. "/out/Release" )
 
