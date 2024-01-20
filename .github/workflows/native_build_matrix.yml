@@ -90,7 +90,7 @@ jobs:
       run: make -C ./RecastCWrapper/Build/gmake2 config=release
 
     - name: LS
-      run: ls ./RecastCWrapper/Build/gmake2/out/
+      run: ls -R ./RecastCWrapper/Build/
         
     - name: Upload Build Artifact (Arm64)
       uses: actions/upload-artifact@v2
