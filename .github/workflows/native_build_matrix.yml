@@ -68,6 +68,32 @@ jobs:
       with:
         name: windows-artifact
         path: ./RecastCWrapper/Build/vs2019/out/Release
+  build-arm64:
+    runs-on: macos-latest-xlarge
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+        
+    - name: Download and Extract Premake5
+      run: |
+        wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta2/premake-5.0.0-beta2-macosx.tar.gz
+        tar xf premake-5.0.0-beta2-macosx.tar.gz
+
+    - name: Generate Makefile
+      working-directory: ./RecastCWrapper
+      run: ../premake5 gmake2
+
+    - name: Build Project
+      run: make -C ./RecastCWrapper/Build/gmake2 config=release
+        
+    - name: Upload Build Artifact (Arm64)
+      uses: actions/upload-artifact@v2
+      with:
+        name: arm64-artifact
+        path: ./RecastCWrapper/Build/gmake2/out/Release
 
   publish-nuget:
     needs: [build-ubuntu, build-windows]
