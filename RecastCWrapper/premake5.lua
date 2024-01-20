@@ -53,6 +53,7 @@ solution "recastwrapper"
 		architecture "x64"
 project "Detour"
 	language "C++"
+	cppdialect "C++20"
 	kind "StaticLib"
 	includedirs { 
 		"../RecastNav/Detour/Include" 
@@ -69,6 +70,7 @@ project "Detour"
 		}
 project "Recast"
 	language "C++"
+	cppdialect "C++20"
 	kind "StaticLib"
 	includedirs { 
 		"../RecastNav/Recast/Include" 
@@ -80,6 +82,7 @@ project "Recast"
 
 project "RecastWrapper"
 	language "C++"
+	cppdialect "C++20"
 	kind "SharedLib"
 	includedirs {
 		"Include",
